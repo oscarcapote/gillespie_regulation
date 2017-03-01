@@ -27,7 +27,7 @@ a0 = a1+a2+a3+a4+a5+a6
 !----------------------------------------------------------
 do
 !------------------UPDATE DE PROBABILITATS-----------------
-call prob_compute(Pr,a)
+call prob_compute(Pr,a0)
 !----------------------------------------------------------
 
 !-------------------MONTECARLO TIME STEP-------------------
@@ -61,9 +61,9 @@ enddo
 !----------------------------------------------------------
 contains
 
-subroutine prob_compute(Pr,a)
-    real(8),dimension(6) :: a,Pr!Ratios i probabilitats de donar una reaccio
-    real(8) :: suma
+subroutine prob_compute(Pr,a0)
+    real(8),dimension(6) :: Pr!Ratios i probabilitats de donar una reaccio
+    real(8) :: a0
     Pr = a
     !print*,a
     Pr(1) = Pr(1)*PDNA
@@ -72,19 +72,8 @@ subroutine prob_compute(Pr,a)
     Pr(4) = Pr(4)*M
     Pr(5) = Pr(5)*M
     Pr(6) = Pr(6)*P
-    suma = 0.0d0
-    !print*,'PDNA,P,DNA,M,P',PDNA,P,DNA,M,P
-    !print*,'pr',Pr
-    !print*,'Probabilitats',Pr/sum(Pr)
-    !do i=1,6
-    !    suma = suma+Pr(i)
-    !    Pr(i) = suma
-    !enddo
-    !print*,Pr
-    !print*,'a0',suma
-    !read(*,*)
-    !Pr = Pr/suma
-    Pr = Pr/sum(Pr)
+    a0 = sum(Pr)
+    Pr = Pr/a0
 end subroutine
 
 subroutine reaction(mu)
