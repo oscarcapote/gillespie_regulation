@@ -3,8 +3,8 @@ implicit none
 real(8) :: k1,km1,am,ap,dm,dp,a0!Ratios
 real(8),dimension(6) :: Pr!Ratios i probabilitats de donar una reaccio
 real(8) ::P,M,DNA,PDNA!Magnituds dinamiques
-real(8) :: suma
-real(8) :: t,tau,rnd!Temps actual,temps estocastic i variable aleatoria entre 0 i 1
+real(8) :: suma,a,ba
+real(8) :: t,tau,rnd,rnd2!Temps actual,temps estocastic i variable aleatoria entre 0 i 1
 integer(8) :: mu,i,MaxItt,itt
 
 !----------------------INICIALITZACIO---------------------
@@ -23,6 +23,10 @@ integer(8) :: mu,i,MaxItt,itt
 t=0
 itt=1
 MaxItt=2000
+
+!Parametres per reescalar U(0,1) i evitar que surti 0: Passa a ser U(a,1)
+a = 0.0000000001
+ba = 1.0d0-a
 !call srand(9)
 !----------------------------------------------------------
 do
@@ -31,8 +35,9 @@ call prob_compute(Pr,a0)
 !----------------------------------------------------------
 
 !-------------------MONTECARLO TIME STEP-------------------
-tau = -log(rand())/a0!Temps per que passi una reaccio
-rnd = rand()
+rnd = rand()!Random per triar reaccio
+rnd2= a+ba*rand()!random pel temps
+tau = -log(rnd2)/(a0)!Temps per que passi una reaccio
 mu = 1!Reaccio qua pasara
 suma =Pr(mu)
 do while(rnd>suma)
@@ -52,7 +57,6 @@ contains
 
 subroutine prob_compute(Pr,a0)
     real(8),dimension(6) :: Pr!Ratios i probabilitats de donar una reaccio
-    real(8) :: a0
     real(8) :: a0
     Pr(1) = k1*P*DNA
     Pr(2) = km1*(PDNA)
