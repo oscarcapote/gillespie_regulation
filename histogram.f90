@@ -25,8 +25,8 @@ if ( ios /= 0 ) stop "Error opening scratch file on unit 100"
 do i = 1, N
   read(100,*, iostat=ios) t,P(i),M(i)
 end do
-call make_histogram(P,ceiling(sqrt(dble(N)),8),H,X)
-do i = 1, ceiling(sqrt(dble(N)))
+call make_histogram(M,ceiling(sqrt(dble(N)*0.8),8),H,X)
+do i = 1, ceiling(sqrt(dble(N))*0.8)
   print*, X(i),H(i)
 end do
 
@@ -48,7 +48,7 @@ subroutine make_histogram(D,N,L,X)
     allocate(L(N))
     allocate(X(N))
     L = 0.0d0
-    X = (/(x0+i*h, i =0, N)/)
+    X = (/(x0+i*h, i =1, N)/)-0.5*h
     do i=1,size(D)
       k = ((D(i)-x0)/(xf-x0))*N+1
       L(k) = L(k) + 1
