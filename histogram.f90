@@ -25,14 +25,30 @@ if ( ios /= 0 ) stop "Error opening scratch file on unit 100"
 do i = 1, N
   read(100,*, iostat=ios) t,P(i),M(i)
 end do
-call make_histogram(M,ceiling(sqrt(dble(N)*0.8),8),H,X)
-do i = 1, ceiling(sqrt(dble(N))*0.8)
-  print*, X(i),H(i)
-end do
-
-
 close(unit=100, iostat=ios)
 if ( ios /= 0 ) stop "Error closing file unit 100"
+
+
+
+call make_histogram(M,ceiling(sqrt(dble(N)*0.8),8),H,X)
+open(unit=100, file='hist_m.dat', iostat=ios,action="write")
+do i = 1, ceiling(sqrt(dble(N))*0.8)
+  write(100,*) X(i),H(i)
+end do
+close(unit=100, iostat=ios)
+if ( ios /= 0 ) stop "Error closing file unit 100"
+
+
+call make_histogram(P,ceiling(sqrt(dble(N)*0.8),8),H,X)
+open(unit=100, file='hist_p.dat', iostat=ios,action="write")
+do i = 1, ceiling(sqrt(dble(N))*0.8)
+      print*,i,ceiling(sqrt(dble(N))*0.8)
+  write(100,*) X(i),H(i)
+end do
+close(unit=100, iostat=ios)
+if ( ios /= 0 ) stop "Error closing file unit 100"
+
+
 contains
 
 subroutine make_histogram(D,N,L,X)
@@ -48,9 +64,12 @@ subroutine make_histogram(D,N,L,X)
     allocate(L(N))
     allocate(X(N))
     L = 0.0d0
-    X = (/(x0+i*h, i =1, N)/)-0.5*h
+    X = (/(x0+(i-0.5d0)*h, i =1, N)/)!-0.5*h
     do i=1,size(D)
       k = ((D(i)-x0)/(xf-x0))*N+1
+      if(k>N)then
+        cycle
+      endif
       L(k) = L(k) + 1
     enddo
 end subroutine
