@@ -1,0 +1,12 @@
+!---Condicions inicials
+    P=0.0d0
+    M=0.0d0
+    DNA = 2.0d0
+    PDNA = 0.0d0
+!---Ritmes
+    k1=0.0d0
+    km1=0.0d0
+    am=600.0d0
+    ap=20.0d0
+    dm=10.0d0
+    dp=1.0d0
